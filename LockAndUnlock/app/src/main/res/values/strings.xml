@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">lock and unlock</string>
+    <string name="button1">Activate Permission</string>
+    <string name="button2">Start Server</string>
+    <string name="button22">End Server</string>
+    <string name="button3">Wave setting</string>
+    <string name="tip1">Please activate permission first！</string>
+    <string name="tip2">Server Starts！</string>
+    <string name="tip3">Server Ends！</string>
+    <string name="tip4">You already activated permission！</string>
+    <string name="set1">Set wave action times：</string>
+    <string name="set2">Set the time of finishing waves(unit：0.1s)：</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="help">How to uninstall and deactivate the service: Settings-> Lock Screen and security-> Other security settings-> Device Administrators-> Uncheck the app</string>
+    <string name="help2"></string>
+</resources>
