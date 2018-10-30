@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <string name="app_name">Global Action Bar Service</string>
+    <string name="app_name">Hand Gesture Service</string>
     <string name="power">Power</string>
     <string name="volume">Vol +</string>
     <string name="scroll">Scroll</string>

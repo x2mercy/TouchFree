@@ -149,9 +149,6 @@ public class HandGestureService extends AccessibilityService implements CameraGe
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.TOP;
-//        lp.format = PixelFormat.TRANSPARENT;
-//        loader.CameraLayout.setVisibility(View.INVISIBLE);
-//        loader.CameraLayout.setAlpha(0);
 
         // Add view to service
         wm.addView(loader.CameraLayout,lp);
