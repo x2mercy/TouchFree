@@ -38,10 +38,16 @@ import java.util.Deque;
 
 public class HandGestureService extends AccessibilityService implements CameraGestureSensor.Listener, ClickSensor.Listener{
 
-    FrameLayout mLayout;
-    private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
     private static final String TAG = "CS591E2";
 
+    // TODO: GET RID OF BLACK BOX FROM CAMERA LAYOUT
+    //      - possibly make it an underlay if possible
+    //      - setting visibility to invisible or gone breaks gesture detection
+    //      - setting alpha does nothing
+    // TODO: Update all onGesture events to see what actions are possible.
+    // TODO: Add hover gesture
+    // TODO: See if multipart gestures can be recognized (gesture up then down)
+    // TODO: Update gesture sensitivity
 
 
     @Override
@@ -69,9 +75,16 @@ public class HandGestureService extends AccessibilityService implements CameraGe
     @Override
     public void onGestureLeft(CameraGestureSensor caller, long gestureLength) {
         AccessibilityNodeInfo scrollable = findScrollableNode(getRootInActiveWindow());
-        if (scrollable != null) {
-            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_LEFT.getId());
-        }
+//        if (scrollable != null) {
+//            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_LEFT.getId());
+//        }
+
+        Path swipePath = new Path();
+        swipePath.moveTo(100, 1000);
+        swipePath.lineTo(1000, 1000);
+        GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
+        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(swipePath, 0, 500));
+        dispatchGesture(gestureBuilder.build(), null, null);
         Log.i(TAG,"Gesture Left");
 
     }
@@ -79,9 +92,16 @@ public class HandGestureService extends AccessibilityService implements CameraGe
     @Override
     public void onGestureRight(CameraGestureSensor caller, long gestureLength) {
         AccessibilityNodeInfo scrollable = findScrollableNode(getRootInActiveWindow());
-        if (scrollable != null) {
-            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_RIGHT.getId());
-        }
+//        if (scrollable != null) {
+//            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_RIGHT.getId());
+//        }
+
+        Path swipePath = new Path();
+        swipePath.moveTo(1000, 1000);
+        swipePath.lineTo(100, 1000);
+        GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
+        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(swipePath, 0, 500));
+        dispatchGesture(gestureBuilder.build(), null, null);
         Log.i(TAG,"Gesture Right");
 
     }
@@ -91,43 +111,8 @@ public class HandGestureService extends AccessibilityService implements CameraGe
 
     }
 
-    private void configureSwipeButton() {
-        Button swipeButton = (Button) mLayout.findViewById(R.id.swipe);
-        swipeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Path swipePath = new Path();
-                swipePath.moveTo(1000, 1000);
-                swipePath.lineTo(100, 1000);
-                GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
-                gestureBuilder.addStroke(new GestureDescription.StrokeDescription(swipePath, 0, 500));
-                dispatchGesture(gestureBuilder.build(), null, null);
-            }
-        });
-    }
 
-    private void configurePowerButton() {
-        Button powerButton = (Button) mLayout.findViewById(R.id.power);
-        powerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                performGlobalAction(GLOBAL_ACTION_POWER_DIALOG);
-            }
-        });
-    }
-
-    private void configureVolumeButton() {
-        Button volumeUpButton = (Button) mLayout.findViewById(R.id.volume_up);
-        volumeUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-            }
-        });
-    }
-
+    // Figures out if scrolling is possible.
     private AccessibilityNodeInfo findScrollableNode(AccessibilityNodeInfo root) {
         Deque<AccessibilityNodeInfo> deque = new ArrayDeque<>();
         deque.add(root);
@@ -143,41 +128,19 @@ public class HandGestureService extends AccessibilityService implements CameraGe
         return null;
     }
 
-    private void configureScrollButton() {
-        Button scrollButton = (Button) mLayout.findViewById(R.id.scroll);
-        scrollButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-//                try {
-//
-//                    //intent: start voice
-//                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Locale.ENGLISH);
-//                    //begin voice recognition
-//                    startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
-//
-//                }catch (Exception e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(), "Can't find audit device", Toast.LENGTH_LONG).show();
-//                }
-
-                AccessibilityNodeInfo scrollable = findScrollableNode(getRootInActiveWindow());
-                if (scrollable != null) {
-                    scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.getId());
-                }
-            }
-        });
-    }
 
     @Override
     protected void onServiceConnected() {
-        Log.i(TAG, "Connecting");
-        // Create an overlay and display the action bar
+        Log.i(TAG, "Loading OpenCV");
+
+        // Load OpenCV
+        LocalOpenCV loader = new LocalOpenCV(this,this,this);
+
+        // Get window manager to be able to bind layouts to service
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mLayout = new FrameLayout(this);
+
+        // Set up layout parameters
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
         lp.format = PixelFormat.TRANSLUCENT;
@@ -186,26 +149,15 @@ public class HandGestureService extends AccessibilityService implements CameraGe
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.TOP;
-        LayoutInflater inflater = LayoutInflater.from(this);
-        inflater.inflate(R.layout.action_bar, mLayout);
-//        wm.addView(mLayout, lp);
-        LocalOpenCV loader = new LocalOpenCV(this,this,this);
 //        lp.format = PixelFormat.TRANSPARENT;
 //        loader.CameraLayout.setVisibility(View.INVISIBLE);
 //        loader.CameraLayout.setAlpha(0);
+
+        // Add view to service
         wm.addView(loader.CameraLayout,lp);
 
 
-        Log.i(TAG, "Made mLoaderCallback");
-
-
-
-
-        configurePowerButton();
-        configureVolumeButton();
-        configureScrollButton();
-
-        configureSwipeButton();
+        Log.i(TAG, "Finished loading");
 
     }
 

@@ -11,6 +11,7 @@ import ca.useful.newhandwave.R;
 
 public class BackendGestureCamera {
 
+    // Modified to accept any context instead of just Activity
     public RelativeLayout getJavaCameraViewWrappedInRelativeLayout(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_java_camera_view, null);

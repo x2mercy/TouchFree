@@ -20,6 +20,8 @@ public class LocalOpenCV {
     private CameraGestureSensor.Listener gestureListener = null;
     private ClickSensor.Listener clickListener = null;
     private BaseLoaderCallback mLoaderCallback = null;
+
+    // Added so that the service can bind the layout
     public RelativeLayout CameraLayout = null;
 
     /**
@@ -40,6 +42,7 @@ public class LocalOpenCV {
         doLoad(context, gestureListener);
     }
 
+    // Modified to accept any context instead of Activity contexts
     public LocalOpenCV(Context context, CameraGestureSensor.Listener gestureListener, ClickSensor.Listener clickListener) {
         this.context = context;
         this.gestureListener = gestureListener;
@@ -55,10 +58,13 @@ public class LocalOpenCV {
         loadOpenCV(context);
     }
 
+    // Modified to accept any context instead of just Activity contexts
     public void doLoad(Context context, CameraGestureSensor.Listener listeners, ClickSensor.Listener clickListener) {
         this.CameraLayout = new BackendGestureCamera().getJavaCameraViewWrappedInRelativeLayout(context);
         this.mCamera = (JavaCameraView) this.CameraLayout.findViewById(R.id.camera);
-//        context.addContentView(cameraLayout, cameraLayout.getLayoutParams());
+
+        // Removed because context is no longer an Activity
+        // context.addContentView(cameraLayout, cameraLayout.getLayoutParams());
         makeGenericLoaderCallback();
         loadOpenCV(context);
 
