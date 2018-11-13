@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="46dp"
+        android:text="Query" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="154dp"
+        android:layout_height="42dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="131dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/Ins"
+        android:layout_width="169dp"
+        android:layout_height="110dp"
+        android:layout_alignStart="@+id/btn1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-34dp"
+        android:layout_marginBottom="216dp"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/ig"
+        android:layout_width="156dp"
+        android:layout_height="149dp"
+        android:layout_alignEnd="@+id/label"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="51dp" />
+
+
+</RelativeLayout>
