@@ -10,7 +10,14 @@
         android:layout_width="match_parent"
         android:id="@+id/relativelayout_event"
         android:layout_above="@+id/navigation"
-        />
+        >
+
+        <fragment
+            android:id="@+id/frag_navigation"
+            android:name="com.example.chenrui.easycook.Recipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
     <!-- add botton navigation view to the app-->
     <android.support.design.widget.BottomNavigationView
@@ -20,8 +27,8 @@
         android:layout_alignParentBottom="true"
         android:background="@color/cardview_light_background"
         app:itemBackground="@color/cardview_light_background"
-        app:menu="@menu/event_navigation_items"
         app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector" />
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/event_navigation_items" />
 
 </RelativeLayout>
