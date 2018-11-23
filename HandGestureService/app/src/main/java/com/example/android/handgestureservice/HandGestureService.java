@@ -16,9 +16,11 @@ package com.example.android.handgestureservice;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
+import android.content.Intent;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +41,7 @@ import java.util.Deque;
 public class HandGestureService extends AccessibilityService implements CameraGestureSensor.Listener, ClickSensor.Listener{
 
     private static final String TAG = "CS591E2";
+    int test = 0;
 
     // TODO: GET RID OF BLACK BOX FROM CAMERA LAYOUT
     //      - possibly make it an underlay if possible
@@ -49,6 +52,19 @@ public class HandGestureService extends AccessibilityService implements CameraGe
     // TODO: See if multipart gestures can be recognized (gesture up then down)
     // TODO: Update gesture sensitivity
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i(TAG,"Starting Service");
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        test = intent.getIntExtra("test",0);
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public void onGestureUp(CameraGestureSensor caller, long gestureLength) {
@@ -132,7 +148,8 @@ public class HandGestureService extends AccessibilityService implements CameraGe
 
     @Override
     protected void onServiceConnected() {
-        Log.i(TAG, "Loading OpenCV");
+        Log.i(TAG, "Loading OpenCV " + String.valueOf(test));
+
 
         // Load OpenCV
         LocalOpenCV loader = new LocalOpenCV(this,this,this);
@@ -143,7 +160,7 @@ public class HandGestureService extends AccessibilityService implements CameraGe
         // Set up layout parameters
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
-        lp.format = PixelFormat.TRANSLUCENT;
+        lp.format = PixelFormat.TRANSPARENT;
         lp.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
